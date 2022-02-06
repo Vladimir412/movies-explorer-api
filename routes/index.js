@@ -22,17 +22,5 @@ router.use(routerCreateMovies);
 router.use(routerGetMovies);
 router.use(routerDeleteMovie);
 router.all('*', (req, res, next) => next(new ErrorNotFound('Ресурс не найден!')));
-router.use((err, req, res, next) => { // Обработка ошибок
-  const { statusCode = 500, message } = err;
-
-  res
-    .status(statusCode)
-    .send({
-      message: statusCode === 500
-        ? 'Произошла ошибка'
-        : message,
-    });
-  next();
-});
 
 module.exports = router;

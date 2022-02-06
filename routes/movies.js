@@ -23,9 +23,6 @@ const validateLink = (link) => {
 };
 
 const routerCreateMovies = router.post('/movies', auth, celebrate({
-  headers: Joi.object().keys({
-    authorization: Joi.string().required(),
-  }).unknown(true),
   body: Joi.object().keys({
     country: Joi.string().required(),
     director: Joi.string().required(),
@@ -35,22 +32,15 @@ const routerCreateMovies = router.post('/movies', auth, celebrate({
     image: Joi.string().required().custom(validateLink),
     trailer: Joi.string().required(),
     thumbnail: Joi.string().required(),
-    movieId: Joi.string().hex().length(24).required(),
+    movieId: Joi.number().min(1).required(),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
   }),
 }), createMovies);
 
-const routerGetMovies = router.get('/movies', auth, celebrate({
-  headers: Joi.object().keys({
-    authorization: Joi.string().required(),
-  }).unknown(true),
-}), getMovies);
+const routerGetMovies = router.get('/movies', auth, getMovies);
 
 const routerDeleteMovie = router.delete('/movies/:_id', auth, celebrate({
-  headers: Joi.object().keys({
-    authorization: Joi.string().required(),
-  }).unknown(true),
   params: Joi.object().keys({
     _id: Joi.string().hex().length(24).required(),
   }),

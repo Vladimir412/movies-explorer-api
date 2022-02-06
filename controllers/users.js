@@ -22,12 +22,7 @@ const getInfoAboutUser = (req, res, next) => {
         user,
       });
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        return next(new ErrorNotCorrectData('Переданы некорректные данные _id!'));
-      }
-      return next(err);
-    });
+    .catch((err) => next(err));
 };
 
 const updateInfoAboutUser = (req, res, next) => {
@@ -67,13 +62,7 @@ const createUser = (req, res, next) => {
     password,
     name,
   } = req.body;
-  User.findOne({ email })
-    .then((user) => {
-      if (user) {
-        return next(new ErrorUserExists('Пользователь с таким email уже существует!'));
-      }
-      return bcrypt.hash(password, SOLT);
-    })
+  bcrypt.hash(password, SOLT)
     .then((hash) => User.create({
       email,
       name,
@@ -86,6 +75,9 @@ const createUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return next(new ErrorNotCorrectData('Переданы некорректные данные _id!'));
+      }
+      if (err.code === 11000) {
+        return next(new ErrorUserExists('Переданный email уже используется другим пользователем!'));
       }
       return next(err);
     });
