@@ -31,7 +31,7 @@ app.use(express.urlencoded({
   extended: true,
 }));
 
-mongoose.connect(NODE_ENV === 'production' ? MONGO_DB_SECRET : 'mongodb://localhost:27017/moviesdb', {
+mongoose.connect(NODE_ENV === 'production' ? MONGO_DB_SECRET : 'mongodb://localhost:27017/movies-explorerdb', {
   useNewUrlParser: true,
 });
 
@@ -48,7 +48,7 @@ app.use(rateLimit({
 }));
 app.use(helmet());
 app.use(router);
-app.use(errors());
 app.use(errorLoger);
+app.use(errors());
 app.use(customErrors);
 app.listen(PORT);

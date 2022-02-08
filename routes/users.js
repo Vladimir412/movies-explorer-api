@@ -27,8 +27,8 @@ const routerGetInfoAboutUser = router.get('/users/me', auth, getInfoAboutUser);
 
 const routerUpdateInfoAboutUser = router.patch('/users/me', auth, celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    email: Joi.string().custom(validateLink).email({
+    name: Joi.string().min(2).max(30).required(),
+    email: Joi.string().required().custom(validateLink).email({
       minDomainSegments: 2,
       tlds: {
         allow: ['com', 'net', 'ru'],
