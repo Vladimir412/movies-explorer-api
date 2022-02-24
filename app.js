@@ -11,6 +11,7 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const router = require('./routes/index');
 const customErrors = require('./middlewares/errors/customErrors');
+const allowedCors = require('./utils/allowedCors');
 
 const {
   MONGO_DB_SECRET,
@@ -39,6 +40,28 @@ app.use(express.static(path.join(__dirname, 'movies-explorer-api')));
 
 app.use(cors());
 app.options('*', cors());
+
+app.use((req, res, next) => {
+  const { origin } = req.headers;
+  const requestHeaders = req.headers['access-control-request-headers'];
+
+  if (allowedCors.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+    res.header('Access-Control-Allow-Headers', requestHeaders);
+  }
+
+  const { method } = req;
+
+  const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
+
+  if (method === 'OPTIONS') {
+    res.headers('Access-Control-Allow-Methods', DEFAULT_ALLOWED_METHODS);
+    return res.end();
+  }
+
+  next();
+});
+
 app.use(requestLogger);
 app.use(rateLimit({
   windowMs: 10 * 60 * 1000,

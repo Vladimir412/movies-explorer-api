@@ -1,0 +1,28 @@
+const allowedCors = [
+  'https://api.movies-vladimir.nomoredomains.work',
+  'https://api.movies-vladimir.nomoredomains.work/signin',
+  'https://api.movies-vladimir.nomoredomains.work/signup',
+  'https://api.movies-vladimir.nomoredomains.work/profile',
+  'https://api.movies-vladimir.nomoredomains.work/movies',
+  'https://api.movies-vladimir.nomoredomains.work/saved',
+  'https://api.movies-vladimir.nomoredomains.work/saved-movies',
+  'https://api.movies-vladimir.nomoredomains.work/error',
+  'http://api.movies-vladimir.nomoredomains.work',
+  'http://api.movies-vladimir.nomoredomains.work/signin',
+  'http://api.movies-vladimir.nomoredomains.work/signup',
+  'http://api.movies-vladimir.nomoredomains.work/profile',
+  'http://api.movies-vladimir.nomoredomains.work/movies',
+  'http://api.movies-vladimir.nomoredomains.work/saved',
+  'http://api.movies-vladimir.nomoredomains.work/saved-movies',
+  'http://api.movies-vladimir.nomoredomains.work/error',
+  'localhost:3000',
+  'localhost:3000/signin',
+  'localhost:3000/signup',
+  'localhost:3000/profile',
+  'localhost:3000/movies',
+  'localhost:3000/saved',
+  'localhost:3000/saved-movies',
+  'localhost:3000/error',
+]
+
+module.exports = allowedCors
