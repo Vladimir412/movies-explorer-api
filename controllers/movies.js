@@ -1,8 +1,14 @@
+require('dotenv').config();
+const {
+  NODE_ENV,
+  JWT_SECRET,
+} = process.env;
 const Movie = require('../models/movie');
 const ErrorNotCorrectData = require('../middlewares/errors/ErrorNotCorrectData');
 const ErrorNotFound = require('../middlewares/errors/ErrorNotFound');
 const ErrorCantDeleteMovieOtherUsers = require('../middlewares/errors/ErrorCantDeleteMovieOtherUsers');
 const ErrorMovieExist = require('../middlewares/errors/ErrorMovieExist');
+const jwt = require('jsonwebtoken')
 
 const createMovies = (req, res, next) => {
   const {
@@ -53,7 +59,13 @@ const createMovies = (req, res, next) => {
 };
 
 const getMovies = (req, res, next) => {
-  Movie.find({})
+  const {authorization} = req.headers
+  const token = authorization.replace('Bearer ', '');
+  const tokenOwner = jwt.verify(
+    token,
+    NODE_ENV === 'production' ? JWT_SECRET : 'secret-code',
+  )
+  Movie.find({owner: tokenOwner._id})
     .then((data) => res.send({
       data,
     }))
