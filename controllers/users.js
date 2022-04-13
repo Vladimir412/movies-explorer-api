@@ -86,29 +86,36 @@ const createUser = (req, res, next) => {
 const login = (req, res, next) => {
   let placeId = null;
   const { email, password } = req.body;
-  User.findOne({ email }).select('password')
+  User.findOne({
+     email
+    }).select('+password')
     .then((user) => {
       if (!user) {
         return next(new ErrorNotCorrectDataForLogin('Неверный email или пароль!'));
       }
       return bcrypt.compare(password, user.password)
-        .then((matched) => {
-          if (!matched) {
-            return next(new ErrorNotCorrectDataForLogin('Неверный email или пароль!'));
-          }
-          placeId = user._id.toString();
-          const token = jwt.sign(
-            { _id: placeId },
-            NODE_ENV === 'production' ? JWT_SECRET : 'secret-code',
-            { expiresIn: '7d' },
-          );
-          return token;
-        })
-        .then((token) => res.send({
-          token,
-        }));
+    .then((matched) => {
+      if (!matched) {
+        return next(new ErrorNotCorrectDataForLogin('Неверный email или пароль!'));
+      }
+      placeId = user._id.toString();
+      const token = jwt.sign(
+        { _id: placeId },
+        NODE_ENV === 'production' ? JWT_SECRET : 'secret-code',
+        { expiresIn: '7d' },
+      );
+      return token;
     })
-    .catch(next);
+    .then(token => {
+      if (!token) {
+        return next(new ErrorNotCorrectDataForLogin('Неверный email или пароль!'));
+      }
+      res.send({
+         token
+      })
+    })
+  })
+    .catch(next)
 };
 
 module.exports = {
